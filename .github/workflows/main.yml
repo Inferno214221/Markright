@@ -1,0 +1,103 @@
+name: Build With Electron Forge
+run-name: Build With Electron Forge
+on: [push]
+
+jobs:
+  windows-build:
+    runs-on: windows-latest
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install Node Dependencies
+        run: npm i
+      - name: Electron Forge Build
+        run: npm run make -- --platform win32 --targets @electron-forge/maker-squirrel
+      - name: Zip Output
+        uses: thedoctor0/zip-release@0.7.1
+        with:
+          type: 'zip'
+          filename: './mark-right-windows.zip'
+          path: './out/markright-win32-x64'
+      - name: Upload Zip For Release
+        uses: actions/upload-artifact@v3.1.2
+        with:
+          name: windows
+          path: './mark-right-windows.zip'
+
+  ubuntu-build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install Node Dependencies
+        run: npm i
+      - name: Electron Forge Build
+        run: npm run make -- --platform linux --targets @electron-forge/maker-deb
+      - name: Zip Output
+        uses: thedoctor0/zip-release@0.7.1
+        with:
+          type: 'zip'
+          filename: 'mark-right-linux.zip'
+          path: './out/markright-linux-x64'
+      - name: Upload Zip For Release
+        uses: actions/upload-artifact@v3.1.2
+        with:
+          name: linux
+          path: './mark-right-linux.zip'
+
+  make-release:
+    runs-on: ubuntu-latest
+    
+    if: ${{ always() }}
+    needs: [windows-build, ubuntu-build]
+    permissions:
+      contents: write
+    
+    steps:
+      - name: Retrieve Windows Build Output
+        uses: actions/download-artifact@v3
+        with:
+          name: windows
+          
+      - name: Retrieve Linux Build Output 
+        uses: actions/download-artifact@v3
+        with:
+          name: linux
+          
+      - run: ls -l
+      
+      - uses: dev-drprasad/delete-tag-and-release@v1.0
+        with:
+          tag_name: auto
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Make Auto Tag
+        uses: mathieudutour/github-tag-action@v6.1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          custom_tag: auto
+          tag_prefix: ""
+      
+      - name: Make A Release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "./mark-right-windows.zip,mark-right-linux.zip"
+          tag: auto
+          prerelease: true
+          makeLatest: false
