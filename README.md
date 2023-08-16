@@ -1,2 +1,2 @@
-# MarkRight
-An editor for the MarkUp language MarkDown.
+# Markright
+An editor for the Markup language Markdown.
