@@ -1,0 +1,16 @@
+body {
+    /* Background Color */
+    --mr-background-color: #272a34;
+    /* Sidebar Color */
+    --mr-sidebar-color: #23252e;
+    /* Active Tab Color */
+    --mr-active-tab-color: #323643;
+    /* Inactive Tab Color */
+    --mr-inactive-tab-color: #23252e;
+    /* Tab Background Color */
+    --mr-tab-background-color: #16171e;
+    /* Font Color */
+    --mr-font-color: #eeeeec;
+    /* Font */
+    --mr-font: "Ubuntu";
+}
