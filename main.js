@@ -23,8 +23,9 @@ app.whenReady().then(() => {
     createWindow();
 
     // TESTS
-    // startFileReading(path.join(__dirname, "GPLv3.md"));
-    // renderMarkdown(startFileReading(path.join(__dirname, "GPLv3.md")));
+    // fileRead(path.join(__dirname, "GPLv3.md"));
+    // renderMarkdown(fileRead(path.join(__dirname, "GPLv3.md")));
+    // fileWrite(path.join(__dirname, "Test.md"), fileRead(path.join(__dirname, "Test.md")) + "\nEEEEEE");
 });
 
 app.on('window-all-closed', () => {
@@ -33,17 +34,17 @@ app.on('window-all-closed', () => {
     }
 });
 
-ipcMain.on("startFileReading", (event, file) => {
-    startFileReading(file);
+ipcMain.on("fileRead", (event, file) => {
+    fileRead(file);
 });
 
-function startFileReading(file) {
+function fileRead(file) {
     if (!fs.existsSync(file)) {
         win.webContents.send("throwError", "File does not exist.");
     }
     console.log("Reading File: " + file);
     let fileContents = fs.readFileSync(file, { encoding: "utf-8" });
-    win.webContents.send("from_startFileReading", fileContents);
+    win.webContents.send("from_fileRead", fileContents);
     return fileContents;
 }
 
@@ -55,4 +56,15 @@ function renderMarkdown(markdown) {
     let renderedMarkdown = marked.parse(markdown, { gfm: true });
     win.webContents.send("from_renderMarkdown", renderedMarkdown);
     return renderedMarkdown;
+}
+
+ipcMain.on("fileWrite", (event, data) => {
+    fileWrite(data.file, data.fileContents);
+});
+
+function fileWrite(file, fileContents) {
+    fs.ensureFileSync(file);
+    console.log("Writing To File: " + file);
+    fs.writeFileSync(file, fileContents, { encoding: "utf-8" });
+    win.webContents.send("from_fileWrite");
 }
