@@ -4,4 +4,5 @@ body {
     background-color: var(--mr-background-color);
     color: var(--mr-font-color);
     font-family: var(--mr-font);
+    font-weight: light;
 }

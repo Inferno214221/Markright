@@ -12,7 +12,7 @@ const createWindow = () => {
             preload: path.join(__dirname, "preload.js")
         },
         autoHideMenuBar: true,
-        icon: path.join(__dirname, "./markright.png"),
+        icon: path.join(__dirname, "markright.png"),
     });
 
     win.loadFile('index.html');
@@ -20,6 +20,9 @@ const createWindow = () => {
 
 app.whenReady().then(() => {
     createWindow();
+
+    // TESTS
+    // startFileReading(path.join(__dirname, "text.md"));
 });
 
 app.on('window-all-closed', () => {
@@ -27,3 +30,12 @@ app.on('window-all-closed', () => {
         app.quit();
     }
 });
+
+function startFileReading(file) {
+    if (!fs.existsSync(file)) {
+        win.webContents.send("throwError", "File does not exist.");
+    }
+    console.log("Reading File: " + file);
+    let fileContents = fs.readFileSync(file, { encoding: "utf-8" });
+    win.webContents.send("from_startFileReading", fileContents);
+}
