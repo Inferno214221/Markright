@@ -1,1 +1,9 @@
 @import "./global.css";
+
+.renderedMarkdown table, .renderedMarkdown table tr, .renderedMarkdown table th, .renderedMarkdown table td {
+    border-color: var(--mr-font-color);
+    border-style: solid;
+    border-collapse: collapse;
+    border-width: 2px;
+    padding: 5px;
+}
