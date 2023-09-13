@@ -5,6 +5,7 @@ this.api.receive("throwError", (error) => {
 this.api.send("fileRead", "./Test.md");
 
 this.api.receive("from_fileRead", (fileContents) => {
+    markdownInput.value = fileContents;
     this.api.send("renderMarkdown", fileContents);
 });
 

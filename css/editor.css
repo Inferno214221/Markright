@@ -1,9 +1,46 @@
 @import "./global.css";
 
-.renderedMarkdown table, .renderedMarkdown table tr, .renderedMarkdown table th, .renderedMarkdown table td {
+.renderedMarkdown table,
+.renderedMarkdown table tr,
+.renderedMarkdown table th,
+.renderedMarkdown table td {
     border-color: var(--mr-font-color);
     border-style: solid;
     border-collapse: collapse;
     border-width: 2px;
     padding: 5px;
+}
+
+textarea {
+    background-color: var(--mr-background-color);
+    border: none;
+    color: var(--mr-font-color);
+    resize: none;
+    overflow: visible;
+}
+
+textarea:focus {
+    outline: 0;
+}
+
+.pane {
+    width: 50%;
+    display: inline-block;
+    vertical-align: top;
+    padding: 5px;
+}
+
+.flexParent {
+    display: -ms-flex;
+    display: -webkit-flex;
+    display: flex;
+}
+
+#markdownInput {
+    width: calc(100% - 6px);
+    height: calc(100% - 6px);
+}
+
+#markdownOutput {
+    width: 100%;
 }

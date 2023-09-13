@@ -6,3 +6,22 @@ body {
     font-family: var(--mr-font);
     font-weight: light;
 }
+
+::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--mr-tab-background-color);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--mr-active-tab-color);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--mr-primary-color);
+}

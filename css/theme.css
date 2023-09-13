@@ -13,4 +13,6 @@ body {
     --mr-font-color: #eeeeec;
     /* Font */
     --mr-font: "Ubuntu";
+    /* Primary Color */
+    --mr-primary-color: #2777ff;
 }
