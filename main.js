@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, dialog, shell } = require('electron');
+const { app, BrowserWindow, Menu, ipcMain, dialog, shell, MenuItem } = require('electron');
 const path = require("path")
 const fs = require("fs-extra");
 const marked = require("marked");
@@ -12,12 +12,52 @@ const createWindow = () => {
         webPreferences: {
             preload: path.join(__dirname, "preload.js")
         },
-        autoHideMenuBar: true,
+        // autoHideMenuBar: true,
         icon: path.join(__dirname, "markright.png"),
     });
 
     win.loadFile('index.html');
 }
+
+const editorMenu = [
+    {
+        label: "File",
+        submenu: [
+            {
+                label: "Save",
+                accelerator: "Ctrl+S",
+                click: function () { win.webContents.send("save"); },
+            },
+            {
+                role: "quit",
+            },
+        ],
+    },
+    {
+        role: "editMenu",
+    },
+    {
+        role: "viewMenu",
+    },
+    {
+        role: "windowMenu",
+    },
+    {
+        role: "help",//TODO: reslove help menu
+    }
+];
+
+const openMenu = [
+    {
+        role: "viewMenu",
+    },
+    {
+        role: "windowMenu",
+    },
+    {
+        role: "help",//TODO: reslove help menu
+    }
+];
 
 app.whenReady().then(() => {
     createWindow();
@@ -26,12 +66,28 @@ app.whenReady().then(() => {
     // fileRead(path.join(__dirname, "GPLv3.md"));
     // renderMarkdown(fileRead(path.join(__dirname, "GPLv3.md")));
     // fileWrite(path.join(__dirname, "Test.md"), fileRead(path.join(__dirname, "Test.md")) + "\nEEEEEE");
+
+    // MENU
+    // const menu = Menu.buildFromTemplate(menuTemplate);
+    // Menu.setApplicationMenu(menu);
+    // menu = Menu.getApplicationMenu();
+    // console.log(menu);
 });
 
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
         app.quit();
     }
+});
+
+ipcMain.on("setEditorMenu", (event, args) => {
+    let menu = Menu.buildFromTemplate(editorMenu);
+    Menu.setApplicationMenu(menu);
+});
+
+ipcMain.on("setOpenMenu", (event, args) => {
+    let menu = Menu.buildFromTemplate(openMenu);
+    Menu.setApplicationMenu(menu);
 });
 
 ipcMain.on("fileRead", (event, file) => {

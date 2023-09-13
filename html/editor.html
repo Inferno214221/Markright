@@ -6,12 +6,13 @@
     <title>Markright | Folder Name</title>
     <link rel="icon" href="../markright.svg">
     <link rel="stylesheet" href="../css/editor.css" type="text/css">
+    <script>this.api.send("setEditorMenu");</script>
 </head>
 
 <body>
     <div class="flexParent">
         <div class="pane">
-            <textarea id="markdownInput"></textarea>
+            <textarea id="markdownInput" oninput="renderMarkdown()"></textarea><!-- onchanges -->
         </div>
         <div class="pane">
             <span id="markdownOutput"></span>
