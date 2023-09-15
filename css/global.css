@@ -7,6 +7,10 @@ body {
     font-weight: light;
 }
 
+a {
+    color: var(--mr-primary-color);
+}
+
 ::-webkit-scrollbar {
     width: 7px;
     height: 7px;

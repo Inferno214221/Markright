@@ -2,11 +2,11 @@ this.api.receive("throwError", (error) => {
     alert("An Error Occured: " + error);
 });
 
-this.api.send("fileRead", "./Test.md");
+this.api.send("fileRead", "./gfm-test.md");
 
 this.api.receive("from_fileRead", (fileContents) => {
     markdownInput.value = fileContents;
-    this.api.send("renderMarkdown", fileContents);
+    renderMarkdown();
 });
 
 this.api.receive("save", () => {
@@ -26,10 +26,12 @@ this.api.receive("from_fileWrite", (fileContents) => {
     alert("File Written.")
 });
 
-this.api.receive("from_renderMarkdown", (renderedMarkdown) => {
-    markdownOutput.innerHTML = renderedMarkdown;
-});
-
 function renderMarkdown() {
     this.api.send("renderMarkdown", markdownInput.value);
+    console.log("Initiating Markdown Rendering: " + new Date().getTime());
 }
+
+this.api.receive("from_renderMarkdown", (renderedMarkdown) => {
+    markdownOutput.innerHTML = renderedMarkdown;
+    console.log("Finished Markdown Rendering: " + new Date().getTime());
+});

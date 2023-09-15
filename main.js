@@ -3,6 +3,8 @@ const path = require("path")
 const fs = require("fs-extra");
 const marked = require("marked");
 
+var openDir = null;
+
 const createWindow = () => {
     win = new BrowserWindow({
         width: 1120,
@@ -24,10 +26,33 @@ const editorMenu = [
         label: "File",
         submenu: [
             {
+                label: "New File",
+                accelerator: "Ctrl+N",
+                click: function () { console.log("New File"); },
+            },
+            {
+                label: "New Folder",
+                accelerator: "Ctrl+Shift+N",
+                click: function () { console.log("New Folder"); },
+            },
+            { type: 'separator' },
+            {
+                label: "Open File",
+                accelerator: "Ctrl+O",
+                click: function () { console.log("Open File"); },
+            },
+            {
+                label: "Open Folder",
+                accelerator: "Ctrl+Shift+O",
+                click: function () { openFolder(); },
+            },
+            { type: 'separator' },
+            {
                 label: "Save",
                 accelerator: "Ctrl+S",
                 click: function () { win.webContents.send("save"); },
             },
+            { type: 'separator' },
             {
                 role: "quit",
             },
@@ -35,6 +60,45 @@ const editorMenu = [
     },
     {
         role: "editMenu",
+        submenu: [
+            {
+                role: "undo"
+            },
+            {
+                role: "redo"
+            },
+            { type: 'separator' },
+            {
+                role: "copy"
+            },
+            {
+                role: "cut"
+            },
+            {
+                role: "paste"
+            },
+            {
+                role: "pasteAndMatchStyle"
+            },
+            { type: 'separator' },
+            {
+                label: "Find",
+                accelerator: "Ctrl+F",
+                click: function () { console.log("Find"); },
+            },
+            {
+                label: "Replace",
+                accelerator: "Ctrl+H",
+                click: function () { console.log("Replace"); },
+            },
+            { type: 'separator' },
+            {
+                role: "selectAll"
+            },
+            {
+                role: "delete"
+            },
+        ],
     },
     {
         role: "viewMenu",
@@ -48,6 +112,36 @@ const editorMenu = [
 ];
 
 const openMenu = [
+    {
+        label: "File",
+        submenu: [
+            {
+                label: "New File",
+                accelerator: "Ctrl+N",
+                click: function () { console.log("New File"); },
+            },
+            {
+                label: "New Folder",
+                accelerator: "Ctrl+Shift+N",
+                click: function () { console.log("New Folder"); },
+            },
+            { type: 'separator' },
+            {
+                label: "Open File",
+                accelerator: "Ctrl+O",
+                click: function () { console.log("Open File"); },
+            },
+            {
+                label: "Open Folder",
+                accelerator: "Ctrl+Shift+O",
+                click: function () { openFolder(); },
+            },
+            { type: 'separator' },
+            {
+                role: "quit",
+            },
+        ],
+    },
     {
         role: "viewMenu",
     },
@@ -123,4 +217,42 @@ function fileWrite(file, fileContents) {
     console.log("Writing To File: " + file);
     fs.writeFileSync(file, fileContents, { encoding: "utf-8" });
     win.webContents.send("from_fileWrite");
+}
+
+function openFolder() {
+    dialog.showOpenDialog(win, {
+        properties: ["openDirectory"]
+    }).then(dir => {
+        if (dir.canceled === true) {
+            return;
+        }
+        openDir = dir.filePaths[0];
+        scanFolder();
+    });
+}
+
+function scanFolder() {
+    let fsTree = getTree(openDir);
+    console.log(fsTree);
+    //TODO:
+}
+
+function getTree(dir) {
+    let dirs = [];
+    let files = [];
+    fs.readdirSync(dir, { withFileTypes: true }).forEach((file) => {
+        if (file.isDirectory()) {
+            dirs.push(getTree(path.join(dir, file.name)));
+        } else if (path.parse(file.name).ext.toLowerCase() == ".md") {
+            files.push({
+                name: path.parse(file.name).base,
+                path: path.join(dir, file.name),
+            });
+        }
+    });
+    return {
+        name: path.parse(dir).base,
+        files: files,
+        subDirs: dirs,
+    };
 }
