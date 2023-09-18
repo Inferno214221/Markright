@@ -9,14 +9,36 @@
     <script>this.api.send("setEditorMenu");</script>
 </head>
 
-<body>
-    <div class="flexParent">
-        <div class="pane">
-            <textarea id="markdownInput" oninput="renderMarkdown()"></textarea><!-- onchanges -->
-        </div>
-        <div class="pane">
-            <span id="markdownOutput"></span>
-        </div>
+<body style="margin: 0px;">
+    <div class="flexParent" style="height: 100vh;">
+        <nav class="pane" style="width: 200px;">
+            <ul style="padding: 0px;">
+                <li>
+                    <img src="../img/folder.svg" style="width: 25px; vertical-align: middle;">
+                    <span style="vertical-align: middle;">subfolder</span>
+                    <ul>
+                        <li>
+                            <img src="../img/file.svg" style="width: 25px; vertical-align: middle;">
+                            <span style="vertical-align: middle;">test</span>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <img src="../img/file.svg" style="width: 25px; vertical-align: middle;">
+                    <span style="vertical-align: middle;">gpl-v3</span>
+                </li>
+            </ul>
+        </nav>
+        <section class="pane" style="width: calc(100% - 200px); height: calc(100vh + 7px);">
+            <div class="flexParent">
+                <div class="pane" style="width: 50%; padding: 5px;">
+                    <textarea id="markdownInput" oninput="renderMarkdown()"></textarea><!-- onchanges -->
+                </div>
+                <div class="pane" style="width: 50%; padding: 5px;">
+                    <span id="markdownOutput"></span>
+                </div>
+            </div>
+        </section>
     </div>
     <script src="../js/editor.js"></script>
 </body>

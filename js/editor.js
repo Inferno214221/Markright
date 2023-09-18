@@ -16,7 +16,7 @@ this.api.receive("save", () => {
 function fileWrite() {
     //TODO: add trigger
     this.api.send("fileWrite", {
-        file: "./Test.md",
+        file: "./gfm-test.md",
         fileContents: markdownInput.value,
     });
 }
@@ -28,10 +28,10 @@ this.api.receive("from_fileWrite", (fileContents) => {
 
 function renderMarkdown() {
     this.api.send("renderMarkdown", markdownInput.value);
-    console.log("Initiating Markdown Rendering: " + new Date().getTime());
+    // console.log("Initiating Markdown Rendering: " + new Date().getTime());
 }
 
 this.api.receive("from_renderMarkdown", (renderedMarkdown) => {
     markdownOutput.innerHTML = renderedMarkdown;
-    console.log("Finished Markdown Rendering: " + new Date().getTime());
+    // console.log("Finished Markdown Rendering: " + new Date().getTime());
 });

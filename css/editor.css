@@ -24,10 +24,8 @@ textarea:focus {
 }
 
 .pane {
-    width: 50%;
     display: inline-block;
     vertical-align: top;
-    padding: 5px;
 }
 
 .flexParent {
@@ -43,4 +41,42 @@ textarea:focus {
 
 #markdownOutput {
     width: 100%;
+}
+
+nav {
+    background-color: var(--mr-sidebar-color);
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    height: 100%;
+    padding: 5px;
+    overflow: scroll;
+}
+
+body {
+    overflow: hidden;
+}
+
+section {
+    overflow: scroll;
+    position: absolute;
+    top: 0px;
+    left: 200px;
+    background-color: var(--mr-background-color);
+}
+
+/* .folder {
+    list-style-image: url('../img/folder.svg');
+}
+
+.file {
+    list-style-image: url('../img/file.svg');
+} */
+
+ul {
+    list-style-type: none;
+    list-style-position: outside;
+    margin: 0px;
+    padding: 5px;
+    padding-left: 20px;
 }
