@@ -80,3 +80,31 @@ ul {
     padding: 5px;
     padding-left: 20px;
 }
+
+.fsIcon {
+    width: 25px;
+    vertical-align: middle;
+}
+
+.fsSpan {
+    vertical-align: middle;
+}
+
+button {
+    border: none;
+    background-color: inherit;
+    color: inherit;
+    font-family: inherit;
+    font-size: inherit;
+    margin: 0px;
+    padding: 0px;
+}
+
+#fsTreeOutput {
+    width: 200px;
+    /* overflow: auto; */
+    overflow: scroll;
+    text-wrap: nowrap;
+    resize: horizontal;
+    /* height: calc(100vh - 300px); */
+}

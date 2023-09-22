@@ -39,7 +39,7 @@ const editorMenu = [
             {
                 label: "Open File",
                 accelerator: "Ctrl+O",
-                click: function () { console.log("Open File"); },
+                click: function () { fileOpen(); },
             },
             {
                 label: "Open Folder",
@@ -129,7 +129,7 @@ const openMenu = [
             {
                 label: "Open File",
                 accelerator: "Ctrl+O",
-                click: function () { console.log("Open File"); },
+                click: function () { fileOpen(); },
             },
             {
                 label: "Open Folder",
@@ -203,7 +203,7 @@ ipcMain.on("renderMarkdown", (event, markdown) => {
 });
 
 function renderMarkdown(markdown) {
-    let renderedMarkdown = marked.parse(markdown, { gfm: true });
+    let renderedMarkdown = marked.parse(markdown, { gfm: true, breaks: true });
     win.webContents.send("from_renderMarkdown", renderedMarkdown);
     return renderedMarkdown;
 }
@@ -231,17 +231,30 @@ function openFolder() {
     });
 }
 
+function fileOpen() {
+    dialog.showOpenDialog(win, {
+        properties: ["openFile"]
+    }).then(file => {
+        if (file.canceled === true) {
+            return;
+        }
+        fileRead(file.filePaths[0]);
+    });
+}
+
 function scanFolder() {
     let fsTree = getTree(openDir);
     console.log(fsTree);
-    //TODO:
+    win.webContents.send("from_scanFolder", fsTree);
 }
 
 function getTree(dir) {
     let dirs = [];
     let files = [];
     fs.readdirSync(dir, { withFileTypes: true }).forEach((file) => {
-        if (file.isDirectory()) {
+        if (file.name.startsWith(".")) {
+            console.log("Hidden File / Folder: " + file.name);
+        } else if (file.isDirectory()) {
             dirs.push(getTree(path.join(dir, file.name)));
         } else if (path.parse(file.name).ext.toLowerCase() == ".md") {
             files.push({
@@ -254,5 +267,6 @@ function getTree(dir) {
         name: path.parse(dir).base,
         files: files,
         subDirs: dirs,
+        collapsed: true,
     };
 }
