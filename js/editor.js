@@ -98,3 +98,14 @@ function folderToggle(parents) {
 }
 
 //onclick="document.getElementById('resizeMe').style.width = 'calc(100% - ' + this.style.width + ')'; document.getElementById('resizeMe').style.left = this.style.width;"
+
+function wordCount()  {
+    console.log("Finished wordCount: " + markdownInput.value.split(/(\s)/).length);
+}
+
+function findAndReplace()  {
+    find = "Flavored";
+    replace = "Haha";
+    markdownInput.value = markdownInput.value.replaceAll(find, replace);
+    renderMarkdown();
+}
