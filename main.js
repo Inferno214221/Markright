@@ -58,6 +58,17 @@ const editorMenu = [
             },
             { type: 'separator' },
             {
+                label: "Close File",
+                accelerator: "CmdOrCtrl+W",
+                click: function () { fileClose(); },
+            },
+            {
+                label: "Close Folder",
+                accelerator: "CmdOrCtrl+Shift+W",
+                click: function () { closeFolder(); },
+            },
+            { type: 'separator' },
+            {
                 label: "Save",
                 accelerator: "CmdOrCtrl+S",
                 click: function () { win.webContents.send("save"); },
@@ -114,51 +125,6 @@ const editorMenu = [
     },
     {
         role: "viewMenu",
-    },
-    {
-        role: "windowMenu",
-    },
-    {
-        role: "help",//TODO: reslove help menu
-    }
-];
-
-const openMenu = [
-    {
-        label: "File",
-        submenu: [
-            {
-                label: "New File",
-                accelerator: "CmdOrCtrl+N",
-                click: function () { console.log("New File"); },
-            },
-            {
-                label: "New Folder",
-                accelerator: "CmdOrCtrl+Shift+N",
-                click: function () { console.log("New Folder"); },
-            },
-            { type: 'separator' },
-            {
-                label: "Open File",
-                accelerator: "CmdOrCtrl+O",
-                click: function () { fileOpen(); },
-            },
-            {
-                label: "Open Folder",
-                accelerator: "CmdOrCtrl+Shift+O",
-                click: function () { openFolder(); },
-            },
-            { type: 'separator' },
-            {
-                role: "quit",
-            },
-        ],
-    },
-    {
-        role: "viewMenu",
-    },
-    {
-        role: "windowMenu",
     },
     {
         role: "help",//TODO: reslove help menu
@@ -251,6 +217,18 @@ function fileOpen() {
         }
         fileRead(file.filePaths[0]);
     });
+}
+
+function fileClose() {
+    win.webContents.send("fileClose");
+    history.file = "";//TODO: multiple file support
+    writeHistory();
+}
+
+function closeFolder() {
+    win.webContents.send("closeFolder");
+    history.dir = "";
+    writeHistory();
 }
 
 function scanFolder() {

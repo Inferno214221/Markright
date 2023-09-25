@@ -9,6 +9,7 @@ this.api.receive("from_fileRead", (data) => {
     currentFile = data.currentFile;
     renderMarkdown();
     updateTitle();
+    wordCount();
 });
 
 this.api.receive("save", () => {
@@ -127,3 +128,20 @@ function updateTitle() {
         document.title = "Markright | No Open File Or Folder";
     }
 }
+
+this.api.receive("fileClose", () => {
+    markdownInput.value = "No File Opened";
+    currentFile = undefined;
+    renderMarkdown();
+    updateTitle();
+    wordCount();
+});
+
+this.api.receive("closeFolder", () => {
+    fsTreeOutput.innerHTML = "<span>No Directory Open</span>";
+    fsTree = undefined;
+    updateTitle();
+});
+
+renderMarkdown();
+wordCount();
