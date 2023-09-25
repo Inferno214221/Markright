@@ -9,6 +9,8 @@ body {
     --mr-inactive-tab-color: #23252e;
     /* Tab Background Color */
     --mr-tab-background-color: #16171e;
+    /* Pane Border Color */
+    --mr-border-color: #16171e;
     /* Font Color */
     --mr-font-color: #eeeeec;
     /* Font */

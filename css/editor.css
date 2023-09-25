@@ -77,7 +77,6 @@ ul {
     list-style-type: none;
     list-style-position: outside;
     margin: 0px;
-    padding: 5px;
     padding-left: 20px;
 }
 
@@ -107,4 +106,13 @@ button {
     text-wrap: nowrap;
     resize: horizontal;
     /* height: calc(100vh - 300px); */
+}
+
+#wordCountOut {
+    position: absolute;
+    bottom: 0px;
+    right: 7px;
+    padding: 5px 10px;
+    background-color: var(--mr-sidebar-color);
+    border-radius: 5px 0px 0px 0px;
 }

@@ -7,9 +7,9 @@ var openDir = null;
 
 const createWindow = () => {
     win = new BrowserWindow({
-        width: 1120,
-        height: 630,
-        minWidth: 810,
+        width: 1200,
+        height: 670,
+        minWidth: 1190,
         minHeight: 600,
         webPreferences: {
             preload: path.join(__dirname, "preload.js")
@@ -27,29 +27,29 @@ const editorMenu = [
         submenu: [
             {
                 label: "New File",
-                accelerator: "Ctrl+N",
+                accelerator: "CmdOrCtrl+N",
                 click: function () { console.log("New File"); },
             },
             {
                 label: "New Folder",
-                accelerator: "Ctrl+Shift+N",
+                accelerator: "CmdOrCtrl+Shift+N",
                 click: function () { console.log("New Folder"); },
             },
             { type: 'separator' },
             {
                 label: "Open File",
-                accelerator: "Ctrl+O",
+                accelerator: "CmdOrCtrl+O",
                 click: function () { fileOpen(); },
             },
             {
                 label: "Open Folder",
-                accelerator: "Ctrl+Shift+O",
+                accelerator: "CmdOrCtrl+Shift+O",
                 click: function () { openFolder(); },
             },
             { type: 'separator' },
             {
                 label: "Save",
-                accelerator: "Ctrl+S",
+                accelerator: "CmdOrCtrl+S",
                 click: function () { win.webContents.send("save"); },
             },
             { type: 'separator' },
@@ -65,7 +65,8 @@ const editorMenu = [
                 role: "undo"
             },
             {
-                role: "redo"
+                role: "redo",
+                accelerator: "CmdOrCtrl+Y",
             },
             { type: 'separator' },
             {
@@ -78,17 +79,18 @@ const editorMenu = [
                 role: "paste"
             },
             {
+                label: "Paste Unformatted",
                 role: "pasteAndMatchStyle"
             },
             { type: 'separator' },
             {
                 label: "Find",
-                accelerator: "Ctrl+F",
+                accelerator: "CmdOrCtrl+F",
                 click: function () { console.log("Find"); },
             },
             {
                 label: "Replace",
-                accelerator: "Ctrl+H",
+                accelerator: "CmdOrCtrl+H",
                 click: function () { console.log("Replace"); },
             },
             { type: 'separator' },
@@ -117,23 +119,23 @@ const openMenu = [
         submenu: [
             {
                 label: "New File",
-                accelerator: "Ctrl+N",
+                accelerator: "CmdOrCtrl+N",
                 click: function () { console.log("New File"); },
             },
             {
                 label: "New Folder",
-                accelerator: "Ctrl+Shift+N",
+                accelerator: "CmdOrCtrl+Shift+N",
                 click: function () { console.log("New Folder"); },
             },
             { type: 'separator' },
             {
                 label: "Open File",
-                accelerator: "Ctrl+O",
+                accelerator: "CmdOrCtrl+O",
                 click: function () { fileOpen(); },
             },
             {
                 label: "Open Folder",
-                accelerator: "Ctrl+Shift+O",
+                accelerator: "CmdOrCtrl+Shift+O",
                 click: function () { openFolder(); },
             },
             { type: 'separator' },
@@ -194,7 +196,13 @@ function fileRead(file) {
     }
     console.log("Reading File: " + file);
     let fileContents = fs.readFileSync(file, { encoding: "utf-8" });
-    win.webContents.send("from_fileRead", fileContents);
+    win.webContents.send("from_fileRead", {
+        fileContents: fileContents,
+        currentFile: {
+            name: path.parse(file).base,
+            path: file,
+        },
+    });
     return fileContents;
 }
 

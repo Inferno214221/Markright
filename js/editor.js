@@ -1,4 +1,4 @@
-var openFsTree;
+var openFsTree, currentFile;
 
 this.api.receive("throwError", (error) => {
     alert("An Error Occured: " + error);
@@ -6,9 +6,11 @@ this.api.receive("throwError", (error) => {
 
 this.api.send("fileRead", "./gfm-test.md");
 
-this.api.receive("from_fileRead", (fileContents) => {
-    markdownInput.value = fileContents;
+this.api.receive("from_fileRead", (data) => {
+    markdownInput.value = data.fileContents;
+    currentFile = data.currentFile;
     renderMarkdown();
+    updateTitle();
 });
 
 this.api.receive("save", () => {
@@ -18,7 +20,7 @@ this.api.receive("save", () => {
 function fileWrite() {
     //TODO: add trigger
     this.api.send("fileWrite", {
-        file: "./gfm-test.md",
+        file: currentFile.path,
         fileContents: markdownInput.value,
     });
 }
@@ -35,6 +37,7 @@ function renderMarkdown() {
 
 this.api.receive("from_renderMarkdown", (renderedMarkdown) => {
     markdownOutput.innerHTML = renderedMarkdown;
+    wordCount();
     // console.log("Finished Markdown Rendering: " + new Date().getTime());
 });
 
@@ -45,6 +48,7 @@ function fileOpen(path) {
 this.api.receive("from_scanFolder", (fsTree) => {
     openFsTree = fsTree;
     renderFsTree();
+    updateTitle();
 });
 
 function renderFsTree() {
@@ -99,8 +103,12 @@ function folderToggle(parents) {
 
 //onclick="document.getElementById('resizeMe').style.width = 'calc(100% - ' + this.style.width + ')'; document.getElementById('resizeMe').style.left = this.style.width;"
 
-function wordCount()  {
-    console.log("Finished wordCount: " + markdownInput.value.split(/(\s)/).length);
+function wordCount() {
+    wordCountOut.innerHTML = "Words: " + markdownOutput.innerHTML
+    .replaceAll(/(<([^>]+)>)/ig, " ")
+    .split(/\s+/)
+    .filter((string) => string != "" && string != "\n" && string != "\r")
+    .length;
 }
 
 function findAndReplace()  {
@@ -108,4 +116,14 @@ function findAndReplace()  {
     replace = "Haha";
     markdownInput.value = markdownInput.value.replaceAll(find, replace);
     renderMarkdown();
+}
+
+function updateTitle() {
+    if (openFsTree != undefined) {
+        document.title = "Markright | " + openFsTree.name;
+    } else if (currentFile != undefined) {
+        document.title = "Markright | " + currentFile.name;
+    } else {
+        document.title = "Markright | No Open File Or Folder";
+    }
 }
