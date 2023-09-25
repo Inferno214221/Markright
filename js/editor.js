@@ -4,8 +4,6 @@ this.api.receive("throwError", (error) => {
     alert("An Error Occured: " + error);
 });
 
-this.api.send("fileRead", "./gfm-test.md");
-
 this.api.receive("from_fileRead", (data) => {
     markdownInput.value = data.fileContents;
     currentFile = data.currentFile;
@@ -18,7 +16,9 @@ this.api.receive("save", () => {
 });
 
 function fileWrite() {
-    //TODO: add trigger
+    if (currentFile == undefined) {
+        return;
+    }
     this.api.send("fileWrite", {
         file: currentFile.path,
         fileContents: markdownInput.value,
@@ -63,7 +63,7 @@ function outputDir(folder, parents) {
     let output = "";
     folder.subDirs.forEach((dir, index) => {
         let newParents = [...parents];
-        newParents.push(index)
+        newParents.push(index);
         output += "<li>\n\
             <button onclick=\"folderToggle('" + JSON.stringify(newParents) + "')\">\n\
                 <img src=\"../img/folder.svg\" class=\"fsIcon\">\n\

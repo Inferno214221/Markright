@@ -4,6 +4,7 @@ const fs = require("fs-extra");
 const marked = require("marked");
 
 var openDir = null;
+var history = require(path.join(__dirname, "history.json"));
 
 const createWindow = () => {
     win = new BrowserWindow({
@@ -18,7 +19,16 @@ const createWindow = () => {
         icon: path.join(__dirname, "markright.png"),
     });
 
-    win.loadFile('index.html');
+    // win.loadFile('index.html');
+    win.loadFile("html/editor.html").then(() => {
+        if (history.dir != "") {
+            openDir = history.dir;
+            scanFolder();
+        }
+        if (history.file != "") {
+            fileRead(history.file);
+        }
+    });
 }
 
 const editorMenu = [
@@ -157,21 +167,10 @@ const openMenu = [
 
 app.whenReady().then(() => {
     createWindow();
-
-    // TESTS
-    // fileRead(path.join(__dirname, "GPLv3.md"));
-    // renderMarkdown(fileRead(path.join(__dirname, "GPLv3.md")));
-    // fileWrite(path.join(__dirname, "Test.md"), fileRead(path.join(__dirname, "Test.md")) + "\nEEEEEE");
-
-    // MENU
-    // const menu = Menu.buildFromTemplate(menuTemplate);
-    // Menu.setApplicationMenu(menu);
-    // menu = Menu.getApplicationMenu();
-    // console.log(menu);
 });
 
-app.on('window-all-closed', () => {
-    if (process.platform !== 'darwin') {
+app.on("window-all-closed", () => {
+    if (process.platform !== "darwin") {
         app.quit();
     }
 });
@@ -203,6 +202,8 @@ function fileRead(file) {
             path: file,
         },
     });
+    history.file = file;
+    writeHistory();
     return fileContents;
 }
 
@@ -236,6 +237,8 @@ function openFolder() {
         }
         openDir = dir.filePaths[0];
         scanFolder();
+        history.dir = openDir;
+        writeHistory();
     });
 }
 
@@ -277,4 +280,8 @@ function getTree(dir) {
         subDirs: dirs,
         collapsed: true,
     };
+}
+
+function writeHistory() {
+    fs.writeFileSync(path.join(__dirname, "history.json"), JSON.stringify(history, null, 2), "utf-8");
 }
