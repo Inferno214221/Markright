@@ -65,15 +65,7 @@ section {
     background-color: var(--mr-background-color);
 }
 
-/* .folder {
-    list-style-image: url('../img/folder.svg');
-}
-
-.file {
-    list-style-image: url('../img/file.svg');
-} */
-
-ul {
+#fsTreeOutput ul {
     list-style-type: none;
     list-style-position: outside;
     margin: 0px;
@@ -89,7 +81,7 @@ ul {
     vertical-align: middle;
 }
 
-button {
+#fsTreeOutput button {
     border: none;
     background-color: inherit;
     color: inherit;
@@ -97,6 +89,7 @@ button {
     font-size: inherit;
     margin: 0px;
     padding: 0px;
+    box-shadow: none;
 }
 
 #fsTreeOutput {
@@ -115,4 +108,37 @@ button {
     padding: 5px 10px;
     background-color: var(--mr-sidebar-color);
     border-radius: 5px 0px 0px 0px;
+    box-shadow: 0px 0px 5px #000000AA;
+}
+
+#findMenu {
+    background-color: var(--mr-background-color);
+    position: absolute;
+    width: 500px;
+    bottom: 0px;
+    left: calc(50vw - 250px);
+    padding: 5px;
+    border-radius: 5px 5px 0px 0px;
+    box-shadow: 0px 0px 5px #000000AA;
+}
+
+button,
+input[type=text] {
+    background-color: var(--mr-active-tab-color);
+    color: inherit;
+    font-family: inherit;
+    margin: 5px 0px;
+    box-shadow: 0px 0px 5px #000000AA;
+    border-style: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    margin: 5px;
+}
+
+#findInput {
+    width: 100%;
+}
+
+#findInput:focus {
+    outline: 0;
 }

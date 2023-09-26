@@ -112,13 +112,6 @@ function wordCount() {
     .length;
 }
 
-function findAndReplace()  {
-    find = "Flavored";
-    replace = "Haha";
-    markdownInput.value = markdownInput.value.replaceAll(find, replace);
-    renderMarkdown();
-}
-
 function updateTitle() {
     if (openFsTree != undefined) {
         document.title = "Markright | " + openFsTree.name;
@@ -143,5 +136,21 @@ this.api.receive("closeFolder", () => {
     updateTitle();
 });
 
+this.api.receive("find", () => {
+    if (findMenu.style.display == "none") {
+        findMenu.style.display = "block";
+    } else {
+        findMenu.style.display = "none";
+    }
+});
+
+function findAndReplace()  {
+    find = "Flavored";
+    replace = "Haha";
+    markdownInput.value = markdownInput.value.replaceAll(find, replace);
+    renderMarkdown();
+}
+
+findMenu.style.display = "none";
 renderMarkdown();
 wordCount();

@@ -107,7 +107,7 @@ const editorMenu = [
             {
                 label: "Find",
                 accelerator: "CmdOrCtrl+F",
-                click: function () { console.log("Find"); },
+                click: function () { find(); },
             },
             {
                 label: "Replace",
@@ -262,4 +262,8 @@ function getTree(dir) {
 
 function writeHistory() {
     fs.writeFileSync(path.join(__dirname, "history.json"), JSON.stringify(history, null, 2), "utf-8");
+}
+
+function find() {
+    win.webContents.send("find");
 }
