@@ -135,10 +135,12 @@ input[type=text] {
     margin: 5px;
 }
 
-#findInput {
+#findInput,
+#replaceInput {
     width: 100%;
 }
 
-#findInput:focus {
+#findInput:focus,
+#replaceInput:focus {
     outline: 0;
 }

@@ -28,9 +28,14 @@
     <span id="wordCountOut">Words: 0</span>
     <div id="findMenu">
         <div class="flexParent">
-            <input id="findInput" type="text" placeholder="Find">
-            <button class="findButton">Prev</button>
-            <button class="findButton">Next</button>
+            <input id="findInput" type="text" placeholder="Find" oninput="resetFind();" onkeyup="if(event.key == 'Enter') findNext();">
+            <button class="findButton" onclick="findPrev();">Prev</button>
+            <button class="findButton" onclick="findNext();">Next</button>
+        </div>
+        <div class="flexParent" id="replaceSubMenu">
+            <input id="replaceInput" type="text" placeholder="Replace">
+            <button class="replaceButton" onclick="replaceOne();">One</button>
+            <button class="replaceButton" onclick="replaceAll();">All</button>
         </div>
     </div>
     <script src="../js/editor.js"></script>

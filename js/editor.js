@@ -1,4 +1,5 @@
 var openFsTree, currentFile;
+var found = 0;
 
 this.api.receive("throwError", (error) => {
     alert("An Error Occured: " + error);
@@ -139,18 +140,94 @@ this.api.receive("closeFolder", () => {
 this.api.receive("find", () => {
     if (findMenu.style.display == "none") {
         findMenu.style.display = "block";
+        replaceSubMenu.style.display = "none";
+        findInput.focus();
     } else {
         findMenu.style.display = "none";
+        replaceSubMenu.style.display = "none";
     }
 });
 
-function findAndReplace()  {
-    find = "Flavored";
-    replace = "Haha";
-    markdownInput.value = markdownInput.value.replaceAll(find, replace);
+this.api.receive("replace", () => {
+    if (replaceSubMenu.style.display == "none") {
+        findMenu.style.display = "block";
+        replaceSubMenu.style.display = "flex";
+        replaceInput.focus();
+    } else {
+        findMenu.style.display = "none";
+        replaceSubMenu.style.display = "none";
+    }
+});
+
+function getIndicesOf(searchStr, str, caseSensitive) {
+    var searchStrLen = searchStr.length;
+    if (searchStrLen == 0) {
+        return [];
+    }
+    var startIndex = 0, index, indices = [];
+    if (!caseSensitive) {
+        str = str.toLowerCase();
+        searchStr = searchStr.toLowerCase();
+    }
+    while ((index = str.indexOf(searchStr, startIndex)) > -1) {
+        indices.push(index);
+        startIndex = index + searchStrLen;
+    }
+    return indices;
+}
+
+function resetFind() {
+    found = -1;
+}
+
+function findNext() {
+    let indices = getIndicesOf(findInput.value, markdownInput.value, false);
+    found++;
+    if (found > indices.length) found = 0;
+    index = indices[found];
+    markdownInput.focus();
+    markdownInput.selectionStart = index;
+    markdownInput.selectionEnd = index + findInput.value.length;
+}
+
+function findPrev() {
+    let indices = getIndicesOf(findInput.value, markdownInput.value, false);
+    found--;
+    if (found < 0) found = indices.length - 1;
+    index = indices[found];
+    markdownInput.focus();
+    markdownInput.selectionStart = index;
+    markdownInput.selectionEnd = index + findInput.value.length;
+}
+
+function replaceOne() {
+    let findStr = findInput.value.toLowerCase();
+    let replaceStr = replaceInput.value;
+    if (findStr == "" || replaceStr == "") {
+        return;
+    }
+    if (found < 0) found = 0;
+    let indices = getIndicesOf(findInput.value, markdownInput.value, false);
+    if (indices.length == 0) return;
+    markdownInput.value = markdownInput.value.split("").toSpliced(indices[found], findStr.length, replaceStr).join("");
+    renderMarkdown();
+    markdownInput.focus();
+    markdownInput.selectionStart = indices[found];
+    markdownInput.selectionEnd = indices[found] + replaceStr.length;
+    found--;
+}
+
+function replaceAll() {
+    let findStr = findInput.value.toLowerCase();
+    let replaceStr = replaceInput.value;
+    if (findStr == "" || replaceStr == "") {
+        return;
+    }
+    markdownInput.value = markdownInput.value.replace(new RegExp(findStr, "ig"), replaceStr);
     renderMarkdown();
 }
 
 findMenu.style.display = "none";
+replaceSubMenu.style.display = "none";
 renderMarkdown();
 wordCount();

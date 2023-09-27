@@ -112,7 +112,7 @@ const editorMenu = [
             {
                 label: "Replace",
                 accelerator: "CmdOrCtrl+H",
-                click: function () { console.log("Replace"); },
+                click: function () { replace(); },
             },
             { type: 'separator' },
             {
@@ -266,4 +266,8 @@ function writeHistory() {
 
 function find() {
     win.webContents.send("find");
+}
+
+function replace() {
+    win.webContents.send("replace");
 }

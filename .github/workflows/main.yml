@@ -24,13 +24,13 @@ jobs:
         uses: thedoctor0/zip-release@0.7.1
         with:
           type: 'zip'
-          filename: './mark-right-windows.zip'
+          filename: './markright-windows.zip'
           path: './out/markright-win32-x64'
       - name: Upload Zip For Release
         uses: actions/upload-artifact@v3.1.2
         with:
           name: windows
-          path: './mark-right-windows.zip'
+          path: './markright-windows.zip'
 
   ubuntu-build:
     runs-on: ubuntu-latest
@@ -53,13 +53,13 @@ jobs:
         uses: thedoctor0/zip-release@0.7.1
         with:
           type: 'zip'
-          filename: 'mark-right-linux.zip'
+          filename: 'markright-linux.zip'
           path: './out/markright-linux-x64'
       - name: Upload Zip For Release
         uses: actions/upload-artifact@v3.1.2
         with:
           name: linux
-          path: './mark-right-linux.zip'
+          path: './markright-linux.zip'
 
   make-release:
     runs-on: ubuntu-latest
@@ -97,7 +97,7 @@ jobs:
       - name: Make A Release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "./mark-right-windows.zip,mark-right-linux.zip"
+          artifacts: "./markright-windows.zip,markright-linux.zip"
           tag: auto
           prerelease: true
           makeLatest: false
