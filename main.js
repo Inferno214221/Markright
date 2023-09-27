@@ -20,31 +20,25 @@ const createWindow = () => {
     });
 
     // win.loadFile('index.html');
-    win.loadFile("html/editor.html").then(() => {
-        if (history.dir != "") {
-            openDir = history.dir;
-            scanFolder();
-        }
-        if (history.file != "") {
-            fileRead(history.file);
-        }
-    });
+    win.loadFile("html/editor.html");
+    let menu = Menu.buildFromTemplate(editorMenu);
+    Menu.setApplicationMenu(menu);
 }
 
 const editorMenu = [
     {
         label: "File",
         submenu: [
-            {
-                label: "New File",
-                accelerator: "CmdOrCtrl+N",
-                click: function () { console.log("New File"); },
-            },
-            {
-                label: "New Folder",
-                accelerator: "CmdOrCtrl+Shift+N",
-                click: function () { console.log("New Folder"); },
-            },
+            // {
+            //     label: "New File",
+            //     accelerator: "CmdOrCtrl+N",
+            //     click: function () { console.log("New File"); },
+            // },
+            // {
+            //     label: "New Folder",
+            //     accelerator: "CmdOrCtrl+Shift+N",
+            //     click: function () { console.log("New Folder"); },
+            // },
             { type: 'separator' },
             {
                 label: "Open File",
@@ -127,7 +121,13 @@ const editorMenu = [
         role: "viewMenu",
     },
     {
-        role: "help",//TODO: reslove help menu
+        role: "help",
+        submenu: [
+            {
+                label: "Open Demo Document",
+                click: function () { fileRead(path.join(__dirname, "gfm-test.md")); },
+            },
+        ],
     }
 ];
 
@@ -141,14 +141,14 @@ app.on("window-all-closed", () => {
     }
 });
 
-ipcMain.on("setEditorMenu", (event, args) => {
-    let menu = Menu.buildFromTemplate(editorMenu);
-    Menu.setApplicationMenu(menu);
-});
-
-ipcMain.on("setOpenMenu", (event, args) => {
-    let menu = Menu.buildFromTemplate(openMenu);
-    Menu.setApplicationMenu(menu);
+ipcMain.on("openLast", (event, args) => {
+    if (history.dir != "") {
+        openDir = history.dir;
+        scanFolder();
+    }
+    if (history.file != "") {
+        fileRead(history.file);
+    }
 });
 
 ipcMain.on("fileRead", (event, file) => {

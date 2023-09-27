@@ -227,6 +227,7 @@ function replaceAll() {
     renderMarkdown();
 }
 
+this.api.send("openLast");
 findMenu.style.display = "none";
 replaceSubMenu.style.display = "none";
 renderMarkdown();
