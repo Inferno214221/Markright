@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=Markright
+Comment=A Markdown Editor
+Exec=markright
+Icon=/usr/share/markright/markright.svg
+Terminal=false
+Categories=Office;

@@ -271,3 +271,7 @@ function find() {
 function replace() {
     win.webContents.send("replace");
 }
+
+ipcMain.on("openLink", (event, url) => {
+    shell.openExternal(url);
+});

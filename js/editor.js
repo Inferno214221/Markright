@@ -39,9 +39,19 @@ function renderMarkdown() {
 
 this.api.receive("from_renderMarkdown", (renderedMarkdown) => {
     markdownOutput.innerHTML = renderedMarkdown;
+    aTags = markdownOutput.getElementsByTagName("a");
+    for (var i = 0; i < aTags.length; i++) {
+        aTags[i].setAttribute("onclick","openLink('" + aTags[i].href + "');");
+        aTags[i].href = "#";
+    }
+    return false;
     wordCount();
     // console.log("Finished Markdown Rendering: " + new Date().getTime());
 });
+
+function openLink(url) {
+    this.api.send("openLink", url);
+}
 
 function fileOpen(path) {
     this.api.send("fileRead", path);
