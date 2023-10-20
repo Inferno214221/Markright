@@ -1,6 +1,6 @@
 name: Build With Electron Forge
 run-name: Build With Electron Forge
-on: [push]
+on: [push, workflow_dispatch]
 
 jobs:
   windows-build:
@@ -12,28 +12,43 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+      
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
+      
       - name: Install Node Dependencies
         run: npm i
       - name: Electron Forge Build
-        run: npm run make -- --platform win32 --targets @electron-forge/maker-squirrel
-      - name: Zip Output
-        uses: thedoctor0/zip-release@0.7.1
-        with:
-          type: 'zip'
-          filename: './markright-windows.zip'
-          path: './out/markright-win32-x64'
+        run: npm run make -- --platform win32 --targets @electron-forge/maker-zip
+      - name: Move Output Zip
+        run: move .\out\make\zip\win32\x64\markright-win32-x64-1.0.0.zip .\markright-win32-x64.zip
+      
       - name: Upload Zip For Release
         uses: actions/upload-artifact@v3.1.2
         with:
-          name: windows
-          path: './markright-windows.zip'
+          name: win32-x64
+          path: './markright-win32-x64.zip'
+      
+      - name: Electron Forge Build 32 bit
+        run: npm run make -- --platform win32 --targets @electron-forge/maker-zip --arch=ia32
+      - name: Move Output Zip
+        run: move .\out\make\zip\win32\ia32\markright-win32-ia32-1.0.0.zip .\markright-win32-ia32.zip
+      
+      - name: Upload Zip For Release
+        uses: actions/upload-artifact@v3.1.2
+        with:
+          name: win32-ia32
+          path: './markright-win32-ia32.zip'
 
   ubuntu-build:
     runs-on: ubuntu-latest
+
+    if: ${{ always() }}
+    needs: [windows-build]
+    permissions:
+      contents: write
 
     strategy:
       matrix:
@@ -41,48 +56,34 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+      
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
+      
       - name: Install Node Dependencies
         run: npm i
       - name: Electron Forge Build
-        run: npm run make -- --platform linux --targets @electron-forge/maker-deb
-      - name: Zip Output
-        uses: thedoctor0/zip-release@0.7.1
-        with:
-          type: 'zip'
-          filename: 'markright-linux.zip'
-          path: './out/markright-linux-x64'
-      - name: Upload Zip For Release
-        uses: actions/upload-artifact@v3.1.2
-        with:
-          name: linux
-          path: './markright-linux.zip'
-
-  make-release:
-    runs-on: ubuntu-latest
-    
-    if: ${{ always() }}
-    needs: [windows-build, ubuntu-build]
-    permissions:
-      contents: write
-    
-    steps:
+        run: npm run make -- --platform linux --targets @electron-forge/maker-deb,@electron-forge/maker-rpm,@electron-forge/maker-zip
+      - name: Move Output Zip
+        run: mv ./out/make/zip/linux/x64/markright-linux-x64-1.0.0.zip ./markright-linux-x64.zip
+      - name: Move Output Deb
+        run: mv ./out/make/deb/x64/markright_1.0.0_amd64.deb ./markright-linux.deb
+      - name: Move Output Rpm
+        run: mv ./out/make/rpm/x64/markright-1.0.0-1.x86_64.rpm ./markright-linux.rpm
+          
       - name: Retrieve Windows Build Output
         uses: actions/download-artifact@v3
         with:
-          name: windows
-          
-      - name: Retrieve Linux Build Output 
+          name: win32-x64
+      - name: Retrieve Windows Build Output
         uses: actions/download-artifact@v3
         with:
-          name: linux
-          
-      - run: ls -l
+          name: win32-ia32
       
-      - uses: dev-drprasad/delete-tag-and-release@v1.0
+      - name: Delete Tag & Release
+        uses: dev-drprasad/delete-tag-and-release@v1.0
         with:
           tag_name: auto
           github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -97,7 +98,7 @@ jobs:
       - name: Make A Release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "./markright-windows.zip,markright-linux.zip"
+          artifacts: "./markright-win32-x64.zip,./markright-win32-ia32.zip,./markright-linux-x64.zip,./markright-linux.deb,./markright-linux.rpm"
           tag: auto
           prerelease: true
           makeLatest: false

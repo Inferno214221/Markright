@@ -44,7 +44,6 @@ this.api.receive("from_renderMarkdown", (renderedMarkdown) => {
         aTags[i].setAttribute("onclick","openLink('" + aTags[i].href + "');");
         aTags[i].href = "#";
     }
-    return false;
     wordCount();
     // console.log("Finished Markdown Rendering: " + new Date().getTime());
 });

@@ -1,7 +1,7 @@
 {
   "name": "markright",
   "version": "1.0.0",
-  "description": "An editor for the MarkUp language MarkDown.",
+  "description": "An editor for the Markup language Markdown.",
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -16,9 +16,9 @@
   "author": "",
   "license": "GPL-3.0-or-later",
   "bugs": {
-    "url": "https://github.com/Inferno214221/MarkRight/issues"
+    "url": "https://github.com/Inferno214221/Markright/issues"
   },
-  "homepage": "https://github.com/Inferno214221/MarkRight#readme",
+  "homepage": "https://github.com/Inferno214221/Markright#readme",
   "devDependencies": {
     "@electron-forge/cli": "^6.3.0",
     "@electron-forge/maker-deb": "^6.3.0",
