@@ -10,8 +10,8 @@ const createWindow = () => {
     win = new BrowserWindow({
         width: 1200,
         height: 670,
-        minWidth: 1190,
-        minHeight: 600,
+        minWidth: 950,
+        minHeight: 480,
         webPreferences: {
             preload: path.join(__dirname, "preload.js")
         },
@@ -141,6 +141,46 @@ app.on("window-all-closed", () => {
     }
 });
 
+// https://github.com/markedjs/marked/issues/1538
+// Included from Rocky Yang on GitHub {
+const katex = require("katex");
+
+const renderer = new marked.Renderer();
+
+const replacer = (((blockRegex, inlineRegex) => (text) => {
+    text = text.replace(blockRegex, (match, expression) => {
+        let rendered;
+        try {
+            rendered = katex.renderToString(expression, {displayMode: true});
+        } catch (error) {
+            rendered = "<p>(An error occured rendering maths input!)</p>";
+        }
+        return rendered;
+    });
+
+    text = text.replace(inlineRegex, (match, expression) => {
+        let rendered;
+        try {
+            rendered = katex.renderToString(expression, {displayMode: false});
+        } catch (error) {
+            rendered = "<p>(An error occured rendering maths input!)</p>";
+        }
+        return rendered;
+    });
+
+    return text;
+})(/\$\$([\s\S]+?)\$\$/g, /\$([^\n\s]+?)\$/g));
+
+const replaceTypes = ["listitems", "paragraph", "tablecell", "text"];
+replaceTypes.forEach(type => {
+    const original = renderer[type];
+    renderer[type] = (...args) => {
+        args[0] = replacer(args[0]);
+        return original(...args);
+    };
+});
+//}
+
 ipcMain.on("openLast", (event, args) => {
     if (history.dir != "") {
         openDir = history.dir;
@@ -178,7 +218,8 @@ ipcMain.on("renderMarkdown", (event, markdown) => {
 });
 
 function renderMarkdown(markdown) {
-    let renderedMarkdown = marked.parse(markdown, { gfm: true, breaks: true });
+    let renderedMarkdown = marked.parse(markdown, { gfm: true, breaks: true, renderer: renderer });
+    renderedMarkdown = renderedMarkdown.replaceAll("</span><br><span", "</span><span");
     win.webContents.send("from_renderMarkdown", renderedMarkdown);
     return renderedMarkdown;
 }

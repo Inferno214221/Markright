@@ -1,4 +1,5 @@
 @import "./global.css";
+@import "./katex.css";
 
 #markdownOutput table,
 #markdownOutput table tr,
@@ -37,6 +38,10 @@ textarea:focus {
 #markdownInput {
     width: calc(100% - 6px);
     height: calc(100% - 6px);
+    border-width: 3px;
+    border-color: var(--mr-sidebar-color);
+    border-style: solid;
+    border-radius: 5px;
 }
 
 #markdownOutput {

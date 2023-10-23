@@ -8,7 +8,7 @@ module.exports = {
       name: '@electron-forge/maker-squirrel',
       config: {
         authors: "Inferno214221, Mando369 & Ashuneko",
-        description: "An editor for the MarkUp language MarkDown.",
+        description: "An editor for the Markup language Markdown.",
         name: "markright",
 
         iconUrl: "https://github.com/Inferno214221/Markright/blob/main/markright.ico",
@@ -21,8 +21,9 @@ module.exports = {
     {
       name: '@electron-forge/maker-deb',
       config: {
+        productName: "Markright",
         name: "markright",
-        description: "An editor for the MarkUp language Markdown.",
+        description: "An editor for the Markup language Markdown.",
         license: "GNU General Public License v3.0",
         categories: ["Utility"],
         icon: "./markright.svg",
@@ -32,8 +33,9 @@ module.exports = {
     {
       name: '@electron-forge/maker-rpm',
       config: {
+        productName: "Markright",
         name: "markright",
-        description: "An editor for the MarkUp language Markdown.",
+        description: "An editor for the Markup language Markdown.",
         license: "GNU General Public License v3.0",
         categories: ["Utility"],
         icon: "./markright.svg",
