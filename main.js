@@ -16,7 +16,7 @@ const createWindow = () => {
             preload: path.join(__dirname, "preload.js")
         },
         // autoHideMenuBar: true,
-        icon: path.join(__dirname, "markright.png"),
+        icon: path.join(__dirname, "markright.svg"),
     });
 
     // win.loadFile('index.html');
@@ -153,7 +153,8 @@ const replacer = (((blockRegex, inlineRegex) => (text) => {
         try {
             rendered = katex.renderToString(expression, {displayMode: true});
         } catch (error) {
-            rendered = "<p>(An error occured rendering maths input!)</p>";
+            // rendered = "<p>(An error occured rendering maths input!)</p>";
+            rendered = "<p>" + expression + "</p>";
         }
         return rendered;
     });
@@ -163,7 +164,8 @@ const replacer = (((blockRegex, inlineRegex) => (text) => {
         try {
             rendered = katex.renderToString(expression, {displayMode: false});
         } catch (error) {
-            rendered = "<p>(An error occured rendering maths input!)</p>";
+            // rendered = "<p>(An error occured rendering maths input!)</p>";
+            rendered = "<p>" + expression + "</p>";
         }
         return rendered;
     });
