@@ -4,7 +4,17 @@ const fs = require("fs-extra");
 const marked = require("marked");
 
 var openDir = null;
-var history = require(path.join(__dirname, "history.json"));
+const HISTORY_FILE = path.join(app.getPath("userData"), "history.json");
+var history;
+if (fs.existsSync(HISTORY_FILE)) {
+    history = JSON.parse(fs.readFileSync(HISTORY_FILE));
+} else {
+    history = {
+        "file": "",
+        "files": [],
+        "dir": ""
+    };
+}
 
 const createWindow = () => {
     win = new BrowserWindow({
@@ -184,11 +194,11 @@ replaceTypes.forEach(type => {
 //}
 
 ipcMain.on("openLast", (event, args) => {
-    if (history.dir != "") {
+    if (history.dir != "" && fs.existsSync(history.dir)) {
         openDir = history.dir;
         scanFolder();
     }
-    if (history.file != "") {
+    if (history.file != "" && fs.existsSync(history.file)) {
         fileRead(history.file);
     }
 });
@@ -304,7 +314,7 @@ function getTree(dir) {
 }
 
 function writeHistory() {
-    fs.writeFileSync(path.join(__dirname, "history.json"), JSON.stringify(history, null, 2), "utf-8");
+    fs.writeFileSync(HISTORY_FILE, JSON.stringify(history, null, 2), "utf-8");
 }
 
 function find() {
